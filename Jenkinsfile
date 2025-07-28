@@ -12,13 +12,7 @@ environment {
     stages {
         stage('build') {
             steps {
-                script {
-                    // Clean the workspace
-                    sh 'mvn clean'
-
-                    // Build the project
-                    sh 'mvn package'
-                }
+                sh 'mvn clean deploy'
             }
         }
     }
