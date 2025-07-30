@@ -5,7 +5,6 @@ pipeline {
         }
     }
     environment {
-        //JAVA_HOME = "/usr/lib/jvm/java-8-openjdk-amd64"
         PATH = "/opt/apache-maven-3.9.2/bin:$JAVA_HOME/bin:$PATH"
     }
     stages {
