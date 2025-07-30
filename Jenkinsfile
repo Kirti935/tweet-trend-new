@@ -10,45 +10,47 @@ pipeline {
     }
 
     stages {
-        stage('build') {
+        stage('Build') {
             steps {
                 echo "----------Build started----------"
                 sh 'mvn clean deploy -Dmain.test.skip=true'
                 echo "----------Build completed----------"
             }
         }
-        stage('unit-test') {
+
+        stage('Unit Test') {
             steps {
                 echo "----------Running unit tests----------"
+                sh 'mvn test'
                 sh 'mvn surefire-report:report'
-                echo"----------Unit tests completed----------"
+                echo "----------Unit tests completed----------"
             }
         }
 
-        stage('SonarQube analysis') {
+        stage('SonarQube Analysis') {
             environment {
-                scannerHome = tool 'kirti-sonar-scanner' //this is sonar scanner tool
+                scannerHome = tool 'kirti-sonar-scanner' // Sonar Scanner tool name in Jenkins
             }
             steps {
-                withSonarQubeEnv('kirti-sonarqube-server') { // this is sonarqube server 
+                withSonarQubeEnv('kirti-sonarqube-server') { // SonarQube server name in Jenkins
                     sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
         }
+
         stage('SonarQube Quality Gate') {
             steps {
-                scripts { 
-                timeout(time: 1, unit: 'HOURS') //Just in case the quality gate takes a long time
-                def qg = waitForQualityGate() // This will wait for the SonarQube quality gate result
-                if (qg.status != 'OK') {
-                    error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                } else {
-                    echo "Quality gate passed: ${qg.status}"
-                }
+                script {
+                    timeout(time: 1, unit: 'HOURS') {
+                        def qg = waitForQualityGate()
+                        if (qg.status != 'OK') {
+                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                        } else {
+                            echo "Quality gate passed: ${qg.status}"
+                        }
+                    }
                 }
             }
         }
     }
 }
-
-
