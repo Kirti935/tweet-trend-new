@@ -59,7 +59,7 @@ pipeline {
                     echo '<--------------- Jar Publish Started --------------->'
                      def server = Artifactory.newServer (
                      url: registry+"/artifactory" ,  
-                     credentialsId: "jfrog-artifac-cred"
+                     credentialsId: "jfrog-artifact-cred"
                      )
 
                      // Debug: List files in jarstaging directory
