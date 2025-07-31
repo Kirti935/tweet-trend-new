@@ -1,3 +1,4 @@
+def registry = 'https://kirti29.jfrog.io/'
 pipeline {
     agent {
         node { 
