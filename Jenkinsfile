@@ -73,7 +73,7 @@ pipeline {
                     def uploadSpec = """{
                         "files": [
                             {
-                                "pattern": "jarstaging/*",
+                                "pattern": "jarstaging/(.*)",
                                 "target": "libs-release-local/{1}",
                                 "flat": "false",
                                 "props" : "${properties}",
