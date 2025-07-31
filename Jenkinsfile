@@ -1,4 +1,5 @@
 def registry = 'https://kirti29.jfrog.io'
+
 pipeline {
     agent {
         node { 
@@ -30,10 +31,10 @@ pipeline {
 
         stage('SonarQube Analysis') {
             environment {
-                scannerHome = tool 'kirti-sonar-scanner' // Sonar Scanner tool name in Jenkins
+                scannerHome = tool 'kirti-sonar-scanner'
             }
             steps {
-                withSonarQubeEnv('kirti-sonarqube-server') { // SonarQube server name in Jenkins
+                withSonarQubeEnv('kirti-sonarqube-server') {
                     sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
@@ -53,31 +54,37 @@ pipeline {
                 }
             }
         }
-        
+
         stage("Jar Publish") {
-        steps {
-            script {
+            steps {
+                script {
                     echo '<--------------- Jar Publish Started --------------->'
-                     def server = Artifactory.newServer url: registry + "/artifactory", accessToken: credentials('jfrog-access-token')
-                     def properties = "buildid=${env.BUILD_ID},commitid=${GIT_COMMIT}";
-                     def uploadSpec = """{
-                          "files": [
+
+                    def server = Artifactory.newServer(
+                        url: registry + "/artifactory",
+                        credentialsId: "jfrog-artifact-cred" // Username: access-token, Password: <your token>
+                    )
+
+                    def properties = "buildid=${env.BUILD_ID},commitid=${GIT_COMMIT}"
+                    def uploadSpec = """{
+                        "files": [
                             {
-                              "pattern": "jarstaging/(*)",
-                              "target": "libs-release-local/{1}",
-                              "flat": "false",
-                              "props" : "${properties}",
-                              "exclusions": [ "*.sha1", "*.md5"]
+                                "pattern": "jarstaging/(*)",
+                                "target": "libs-release-local/{1}",
+                                "flat": "false",
+                                "props": "${properties}",
+                                "exclusions": [ "*.sha1", "*.md5" ]
                             }
-                         ]
-                     }"""
-                     def buildInfo = server.upload(uploadSpec)
-                     buildInfo.env.collect()
-                     server.publishBuildInfo(buildInfo)
-                     echo '<--------------- Jar Publish Ended --------------->'  
-            
+                        ]
+                    }"""
+
+                    def buildInfo = server.upload(uploadSpec)
+                    buildInfo.env.collect()
+                    server.publishBuildInfo(buildInfo)
+
+                    echo '<--------------- Jar Publish Ended --------------->'
+                }
             }
-        }   
+        }
     }
-}
 }
