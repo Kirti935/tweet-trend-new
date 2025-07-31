@@ -52,15 +52,13 @@ pipeline {
                     }
                 }
             }
-        } */
+        } 
+*/
          stage("Jar Publish") {
             steps {
                 script {
                     echo '<--------------- Jar Publish Started --------------->'
-                     def server = Artifactory.newServer (
-                     url: registry+"/artifactory" ,  
-                     credentialsId: "jfrog-artifact-cred"
-                     )
+                    def server = Artifactory.newServer url:registry+"/artifactory" ,  credentialsId:"jfrog-artifact-cred"
 
                      // Debug: List files in jarstaging directory
                      echo "Listing contents of jarstaging directory:"
@@ -71,8 +69,8 @@ pipeline {
                      def uploadSpec = """{
                           "files": [
                             {
-                              "pattern": "jarstaging/**/*.jar",
-                              "target": "libs-release-local/",
+                              "pattern": "jarstaging/(*)",
+                              "target": "libs-release-local/{1}",
                               "flat": "false",
                               "props" : "${properties}",
                               "exclusions": [ "*.sha1", "*.md5"]
