@@ -1,6 +1,6 @@
 def registry = 'https://kirti29.jfrog.io/'
 def imageName = 'kirti29.jfrog.io/kirti-docker-local/ttrend'
-def verison = '2.1.2'
+def version = '2.1.2'
 
 pipeline {
     agent {
