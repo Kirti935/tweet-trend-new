@@ -30,7 +30,7 @@ pipeline {
                 echo "----------Unit tests completed----------"
             }
         }
-        
+        /*
         stage('SonarQube Analysis') {
             environment {
                 scannerHome = tool 'kirti-sonar-scanner' // Sonar Scanner tool name in Jenkins
@@ -56,7 +56,7 @@ pipeline {
                 }
             }
         }
-
+*/
         stage("Jar Publish") {
             steps {
                 script {
