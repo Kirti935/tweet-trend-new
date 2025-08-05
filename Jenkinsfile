@@ -109,5 +109,15 @@ pipeline {
                 }
             }
         }
+
+        stage ('Deploy to Kubernetes') {
+            steps {
+                script {
+                    echo "----------Deploying to Kubernetes----------"
+                    sh './deploy.sh'
+                    echo "----------Deployment completed----------"
+                }
+            }
+        }
     }
 }
