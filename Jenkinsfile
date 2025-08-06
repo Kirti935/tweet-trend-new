@@ -30,7 +30,7 @@ pipeline {
                 echo "----------Unit tests completed----------"
             }
         }
-        /*
+        
         stage('SonarQube Analysis') {
             environment {
                 scannerHome = tool 'kirti-sonar-scanner' // Sonar Scanner tool name in Jenkins
@@ -56,7 +56,7 @@ pipeline {
                 }
             }
         }
-*/
+        
         stage("Jar Publish") {
             steps {
                 script {
@@ -109,7 +109,7 @@ pipeline {
                 }
             }
         }
-
+        /* this stage is commented out as it is not needed for the current pipeline as we are deploying via helm
         stage ('Deploy to Kubernetes') {
             steps {
                 script {
@@ -118,6 +118,18 @@ pipeline {
                     echo "----------Deployment completed----------"
                 }
             }
+        } */
+
+        stage ('Deploy') {
+            steps {
+                script {
+                    echo "----------Deploying to Kubernetes using Helm----------"
+                    sh 'helm install ttrend-0.1.0.tgz'
+                    echo "----------Helm Deployment completed----------"
+                }
+            }
         }
+
     }
 }
+
